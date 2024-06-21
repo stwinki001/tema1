@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Effect</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .matrix {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .column {
+            position: absolute;
+            width: 20px;
+            white-space: nowrap;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                top: -100%;
+            }
+            100% {
+                top: 100%;
+            }
+        }
+
+        .loading-container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .loading-bar {
+            width: 300px;
+            height: 20px;
+            border: 1px solid #00ff00;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .loading-fill {
+            height: 100%;
+            width: 0;
+            background: #00ff00;
+            animation: load 10s linear forwards;
+        }
+
+        @keyframes load {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .loading-text {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix" id="matrix"></div>
+    <div class="loading-container" id="loading-container">
+        <div class="loading-bar">
+            <div class="loading-fill" id="loading-fill"></div>
+        </div>
+        <div class="loading-text" id="loading-text">Cargando...</div>
+    </div>
+
+    <script>
+        const matrix = document.getElementById('matrix');
+        const columns = Math.floor(window.innerWidth / 20);
+        const rows = Math.floor(window.innerHeight / 20);
+        const loadingText = document.getElementById('loading-text');
+
+        function createColumn() {
+            const column = document.createElement('div');
+            column.classList.add('column');
+            column.style.left = Math.random() * 100 + 'vw';
+            column.style.animationDuration = Math.random() * 2 + 3 + 's';
+            matrix.appendChild(column);
+
+            for (let i = 0; i < rows; i++) {
+                const char = document.createElement('div');
+                char.textContent = Math.random() > 0.5 ? '1' : '0';
+                column.appendChild(char);
+            }
+
+            setTimeout(() => {
+                matrix.removeChild(column);
+                createColumn();
+            }, (Math.random() * 2 + 3) * 1000);
+        }
+
+        for (let i = 0; i < columns; i++) {
+            setTimeout(createColumn, Math.random() * 5000);
+        }
+
+        // Cambio de texto al finalizar la animación de la barra de carga
+        const loadingFill = document.getElementById('loading-fill');
+        loadingFill.addEventListener('animationend', () => {
+            loadingText.textContent = 'virus cargado correctamente';
+        });
+    </script>
+</body>
+</html>
